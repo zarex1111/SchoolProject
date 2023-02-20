@@ -13,7 +13,23 @@ string max_user_id;
 
 void logOut()
 {
+    if (isLoggedIn)
+    {
+        cout << "\n\n\You now logged out\n\n";
+    }
+    else cout << "\n\nYou are not in the account\n\n";
+
     isLoggedIn = false;
+    currentLogin = "";
+    currentChat = "";
+}
+
+void show_current_login()
+{
+    if (currentLogin != "") {
+        cout << "\nCurrent login is " << currentLogin << endl;
+    }
+    else cout << "\nYou are not in the acoount, dude\n";
 }
 
 void get_max_user_id()
@@ -104,6 +120,7 @@ void login()
             {
                 cout << "You successfully logged in!\n\n";
                 isLoggedIn = true;
+                currentLogin = login;
             }
             else
             {
@@ -124,7 +141,7 @@ void listen_commands()
     cin >> command;
     while (command != ">>end") {
         if (command == ">>register")
-        {   
+        {
             if (!isLoggedIn) {
                 start_register();
             }
@@ -141,8 +158,21 @@ void listen_commands()
         {
             logOut();
         }
-        else
+        else if (command == ">>showLogin") {
+            show_current_login();
+        }
+        else if (command == ">>help")
         {
+            ifstream docs;
+            docs.open("documentation.txt", ios::in);
+            string line;
+            while (getline(docs, line))
+            {
+                cout << line << endl;
+            }
+            docs.close();
+        }
+        else {
             cout << "You just inputted the wrong command!\n";
         }
         cin >> command;

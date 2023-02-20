@@ -1,0 +1,5 @@
+>>register - Creates new user profile if you are not already logged in. Automatically logs into the created account
+>>login - Used to enter into user's profile with password;
+>>logOut - logs out of the entered account if can do this
+>>showLogin - shows current login for the account
+>>help - types that hints
