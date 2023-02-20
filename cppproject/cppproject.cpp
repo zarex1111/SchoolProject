@@ -11,6 +11,11 @@ string currentChat;
 string currentLogin;
 string max_user_id;
 
+void logOut()
+{
+    isLoggedIn = false;
+}
+
 void get_max_user_id()
 {
     fstream file;
@@ -57,6 +62,9 @@ void start_register()
         file.open("users.txt", ios::app);
         file << new_id << ' ' << login << ' ' << email << ' ' << password << '\n';
         file.close();
+
+        isLoggedIn = true;
+        currentLogin = login;
     }
     else
     {
@@ -66,18 +74,76 @@ void start_register()
     return;
 }
 
+
+void login()
+{   
+    if (!isLoggedIn) {
+        string login, needful, needless, password, inputted_password;
+        cout << "\n\nInput your login: \n";
+        cin >> login;
+        ifstream ifile;
+        ifile.open("users.txt", ios::in);
+        bool inFile = false;
+        while (ifile >> needless >> needful >> needless >> needless)
+        {
+            if (needful == login) {
+                password = needless;
+                inFile = true;
+                break;
+            }
+        }
+        if (!inFile)
+        {
+            cout << "There's not a user with that login!\n\n";
+        }
+        else
+        {
+            cout << "Now write your password: \n";
+            cin >> inputted_password;
+            if (inputted_password == password)
+            {
+                cout << "You successfully logged in!\n\n";
+                isLoggedIn = true;
+            }
+            else
+            {
+                cout << "That's the wrong password!\n\n";
+            }
+        }
+    }
+    else
+    {
+        cout << "\n\nYou should log out first! (>>logOut)\n\n";
+    }
+}
+
+
 void listen_commands()
 {
     string command;
     cin >> command;
     while (command != ">>end") {
         if (command == ">>register")
+        {   
+            if (!isLoggedIn) {
+                start_register();
+            }
+            else
+            {
+                cout << "You should log out first! (>>logOut)\n";
+            }
+        }
+        else if (command == ">>login")
         {
-            start_register();
+            login();
+        }
+        else if (command == ">>logOut")
+        {
+            logOut();
         }
         else
         {
-            cout << "Въведена е неизвестна команда!";
+            cout << "You just inputted the wrong command!\n";
         }
         cin >> command;
     }
