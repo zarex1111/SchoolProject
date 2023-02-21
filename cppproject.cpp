@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -10,6 +10,59 @@ bool isInChat = false;
 string currentChat;
 string currentLogin;
 string max_user_id;
+
+string vector_to_string(vector <string> mass)
+{
+    string result = "{";
+    for(auto guy:mass)
+    {
+        result += guy;
+        result += ';';
+    }
+    result += '}';
+    return result;
+}
+
+void create_chat()
+{
+    if (isLoggedIn)
+    {
+        cout << "\n\nEnter the chat name (it should be a valid filename): \n";
+        string chat;
+        cin >> chat;
+
+        ifstream file;
+        file.open("chats.txt", ios::in|ios::app);
+        string needful, needless;
+        bool inFile = false;
+        while (file >> needful >> needless)
+        {
+            if (chat == needful)
+            {
+                inFile = true;
+                break;
+            }
+        }
+        if (inFile)
+        {
+            cout << "\nThere is actually a chat with that name\n";
+        }
+        else
+        {
+            vector <string> chat_members;
+            vector <string> admin_list { currentLogin };
+            string admins = vector_to_string(admin_list);
+            string guys = vector_to_string(chat_members);
+
+            file >> chat >> ' ' >> guys >> ' ' >> admins >> '\n';
+
+            currentChat = chat;
+            cout << "You successfully entered into the chat " << chat << '\n';
+        }
+        file.close();
+    }
+    else cout << "\nYou should be logged first\n";
+}
 
 void logOut()
 {
@@ -29,7 +82,7 @@ void show_current_login()
     if (currentLogin != "") {
         cout << "\nCurrent login is " << currentLogin << endl;
     }
-    else cout << "\nYou are not in the acoount, dude\n";
+    else cout << "\nYou are not in the any account, dude\n";
 }
 
 void get_max_user_id()
@@ -45,7 +98,7 @@ void get_max_user_id()
 }
 
 void start_register()
-{   
+{
     string login, password, email;
     string input_login, input_password, input_email, id;
 
@@ -92,7 +145,7 @@ void start_register()
 
 
 void login()
-{   
+{
     if (!isLoggedIn) {
         string login, needful, needless, password, inputted_password;
         cout << "\n\nInput your login: \n";
